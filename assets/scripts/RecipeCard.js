@@ -9,6 +9,7 @@ class RecipeCard extends HTMLElement {
     // EXPOSE - START (All expose numbers start with A)
     // A1. TODO - Attach the shadow DOM to this Web Component (leave the mode open)
     const shadow = this.attachShadow({ mode: "open" });
+    const root = shadow.shadowRoot;
 
     // A2. TODO - Create an <article> element - This will hold our markup once our data is set
     let article = document.createElement("article");
@@ -125,15 +126,86 @@ class RecipeCard extends HTMLElement {
     if (!data) return;
 
     // A6. TODO - Select the <article> we added to the Shadow DOM in the constructor
-    var x = document.querySelector("article"); 
+    var article = this.shadowRoot.querySelector("article"); 
     // A7. TODO - Set the contents of the <article> with the <article> template given in
     //           cardTemplate.html and the data passed in (You should only have one <article>,
     //           do not nest an <article> inside another <article>). You should use Template
     //           literals (tempalte strings) and element.innerHTML for this.
-    x.innerHTML = data;
+
+    // create image element
+    var image = new Image();
+    image.src = data["imgSrc"];
+    image.setAttribute("alt", data["imgAlt"]);
+
+    // create paragraph/div elements
+    var title = document.createElement("p");
+    title.setAttribute("class", "title");
+    var organization = document.createElement("p");
+    organization.setAttribute("class", "organization");
+    var ingredients = document.createElement("p");
+    ingredients.setAttribute("class", "ingredients");
+    var divider = document.createElement("div");
+    divider.setAttribute("class", "rating");
+    
+    // create and update a element link
+    var link = document.createElement("a");
+    link.setAttribute("href", data["titleLnk"]);
+    link.innerText = data["titleTxt"];
+
+    // update organizarion
+    organization.innerText = data["organization"];
+
+    // update rating
+    var span1 = document.createElement("span");
+    span1.innerText = data["rating"];
+    var span2 = document.createElement("span");
+    span2.innerText = "(" + data["numRatings"] + ")";
+    var stars = new Image();
+    stars.setAttribute("alt", data["rating"] + "stars");
+    switch(data["rating"]) {
+      case 0:
+        stars.src = "/assets/images/icons/0-star.svg";
+        break;
+      case 1:
+        stars.src = "/assets/images/icons/1-star.svg";
+        break;
+      case 2:
+        stars.src = "/assets/images/icons/2-star.svg";
+        break;
+      case 3:
+        stars.src = "/assets/images/icons/3-star.svg";
+        break;
+      case 4:
+        stars.src = "/assets/images/icons/4-star.svg";
+        break;
+      case 5:
+        stars.src = "/assets/images/icons/5-star.svg";
+        break;
+      default:
+
+    }
+
+    // update time
+    var time = document.createElement("time");
+    time.innerText = data["lengthTime"];
+
+    // update ingredients
+    ingredients.innerText = data[ingredients];
+
+    // append all elements accordingly
+    article.appendChild(image);
+    article.appendChild(title);
+    title.appendChild(link);
+    article.appendChild(organization);
+    article.appendChild(divider);
+    divider.appendChild(span1);
+    divider.appendChild(stars);
+    divider.appendChild(span2);
+    article.appendChild(time);
+    article.appendChild(ingredients);
   }
 }
 
 // A8. TODO - Define the Class as a customElement so that you can create
 //           'recipe-card' elements
-customElements.define("recipe", RecipeCard);
+customElements.define("recipe-card", RecipeCard);
